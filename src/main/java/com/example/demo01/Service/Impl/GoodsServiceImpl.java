@@ -6,6 +6,7 @@ import com.example.demo01.Domain.LoginUser;
 import com.example.demo01.Domain.Result;
 import com.example.demo01.Mapper.GoodsMapper;
 import com.example.demo01.Mapper.SubmitMapper;
+import com.example.demo01.MyException.WrongTypeException;
 import com.example.demo01.Service.GoodsService;
 import com.example.demo01.Util.SecurityUtil;
 import com.example.demo01.Util.UpLoadFileUtil;
@@ -30,10 +31,6 @@ public class GoodsServiceImpl implements GoodsService {
     private GoodsMapper goodsMapper;
     @Autowired
     private SubmitMapper submitMapper;
-    @Value("${file.real-path}")
-    private String realPath;
-    @Value("${file.vir-path}")
-    private String virPath;
     @Override
     public Result guessYourPreference() {
         List<Goods> yourPreference = goodsMapper.guessYourPreference();
@@ -68,12 +65,11 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Result submitGoods(Goods goods, MultipartFile file) {
-        if(file.isEmpty()){
-            return new Result(200,"文件为空");
-        }
-        String virUrl = UpLoadFileUtil.upLoad(file, realPath, virPath);
-        if(virUrl==null||virUrl.length()<=0){
-            return new Result(500,"上传失败");
+        String virUrl;
+        try {
+            virUrl=UpLoadFileUtil.upLoadProImag(file);
+        } catch (Exception e) {
+            return new Result(400,e.getMessage());
         }
         goods.setGoodsPicture(virUrl);
         goodsMapper.addGoods(goods);//将商品加入商品表中
@@ -102,13 +98,13 @@ public class GoodsServiceImpl implements GoodsService {
         if(count==0){
             return new Result(200,"无修改权限");
         }
-        if(!file.isEmpty()){
-            String virUrl = UpLoadFileUtil.upLoad(file, realPath, virPath);
-            if(virUrl==null||virUrl.length()<=0){
-                return new Result(500,"上传失败");
-            }
-            goods.setGoodsPicture(virUrl);
+        String virUrl;
+        try {
+            virUrl=UpLoadFileUtil.upLoadProImag(file);
+        } catch (Exception e) {
+            return new Result(400,e.getMessage());
         }
+        goods.setGoodsPicture(virUrl);
         goodsMapper.updateSubmitted(goods);
         return new Result(200,"修改成功");
     }

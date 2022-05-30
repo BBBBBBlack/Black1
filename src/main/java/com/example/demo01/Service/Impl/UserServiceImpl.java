@@ -3,6 +3,7 @@ import com.example.demo01.Domain.LoginUser;
 import com.example.demo01.Domain.Result;
 import com.example.demo01.Domain.User;
 import com.example.demo01.Mapper.UserMapper;
+import com.example.demo01.MyException.WrongTypeException;
 import com.example.demo01.Service.UserService;
 import com.example.demo01.Util.JwtUtil;
 import com.example.demo01.Util.RedisCache;
@@ -42,10 +43,6 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private PasswordEncoder bCryptPasswordEncoder;
-    @Value("${file.real-path}")
-    private String realPath;
-    @Value("${file.vir-path}")
-    private String virPath;
     @Override
     public Result login(User user){
         //封装Authentication对象
@@ -101,15 +98,13 @@ public class UserServiceImpl implements UserService {
         User user=new User(null,userName,nickName,null,phoneNumber,picture,null);
         return  new Result(200,"返回用户信息成功",user);
     }
-
     @Override
     public Result addProfilePicture(MultipartFile file) {
-        if(file.isEmpty()){
-            return new Result(200,"文件为空");
-        }
-        String virUrl = UpLoadFileUtil.upLoad(file, realPath, virPath);
-        if(virUrl==null||virUrl.length()<=0){
-            return new Result(500,"上传失败");
+        String virUrl;
+        try {
+            virUrl=UpLoadFileUtil.upLoadProImag(file);
+        } catch (Exception e) {
+            return new Result(400,e.getMessage());
         }
         Long userId = SecurityUtil.getNowUserId();
         userMapper.addProfilePicture(userId,virUrl);
