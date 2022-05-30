@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.UserMapper">
+    <resultMap id="UserMapper01" type="com.example.demo01.Domain.User">
+        <result column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="password" property="password"/>
+        <result column="phone_number" property="phoneNumber"/>
+        <result column="picture" property="picture"/>
+        <result column="user_status" property="status"/>
+    </resultMap>
+    <select id="findUserByUserName" resultMap="UserMapper01">
+        select * from mar_user where user_name=#{userName}
+    </select>
+    <insert id="addUser">
+        insert into mar_user(user_name,password) values(#{userName},#{password})
+    </insert>
+    <insert id="addRole">
+        insert into user_role(user_id,role_id) values(#{userId},1)
+    </insert>
+    <select id="ifUserExist" resultType="java.lang.Integer">
+        select count(*) from mar_user where user_name=#{userName}
+    </select>
+    <update id="addProfilePicture">
+        update mar_user set picture=#{virUrl} where id=#{userId}
+    </update>
+    <update id="upDateNickName">
+        update mar_user set nick_name=#{nickName} where id=#{userId}
+    </update>
+    <update id="upDatePhoneNumber">
+        update mar_user set phone_number=#{phoneNumber} where id=#{userId}
+    </update>
+    <select id="judgeUserBillHandleAuthority" resultType="java.lang.Integer">
+        select count(*) from mar_submit
+            left join mar_goods
+                on mar_submit.goods_id=mar_goods.id
+            left join mar_bill
+                on mar_goods.id=mar_bill.goods_id
+        where mar_submit.user_id=#{userId}
+          and mar_submit.goods_id=#{goodsId}
+          and mar_goods.goods_status=1
+          and mar_bill.bill_status=0;
+    </select>
+
+</mapper>

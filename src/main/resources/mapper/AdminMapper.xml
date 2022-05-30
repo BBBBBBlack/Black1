@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.AdminMapper">
+    <resultMap id="GoodsMapper01" type="com.example.demo01.Domain.Goods">
+        <result column="id" property="id"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="introduction" property="introduction" typeHandler="com.example.demo01.Handler.BlobAndStringHandler"/>
+        <result column="price" property="price"/>
+        <result column="number" property="number"/>
+        <result column="goods_picture" property="goodsPicture"/>
+        <result column="goods_status" property="goodsStatus"/>
+    </resultMap>
+    <resultMap id="UserVoMapper" type="com.example.demo01.Domain.VO.UserVo">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="count" column="count"/>
+    </resultMap>
+    <select id="getCheckingUserId" resultType="java.lang.Long">
+        select user_id from mar_submit where goods_id=#{goodsId};
+    </select>
+    <update id="upDateUserStatus">
+        update mar_user set user_status=0 where id=#{userId}
+    </update>
+    <insert id="addCheck">
+        insert into mar_check(goods_id, check_time, user_id, status)
+        values(#{goodsId,jdbcType=BIGINT},now(),#{userId,jdbcType=BIGINT},#{status})
+    </insert>
+    <select id="getNoPassGoodsCount" resultType="java.lang.Integer">
+        select count(*)
+        from mar_check t where user_id=#{userId,jdbcType=BIGINT}
+                           and status=-1
+    </select>
+    <update id="checkGoods">
+        update mar_goods set goods_status=#{status} where id=#{goodsId,jdbcType=BIGINT}
+    </update>
+    <select id="showAllGoodsInfo" resultMap="GoodsMapper01">
+        select id,goods_name,price,goods_picture,goods_status from mar_goods
+    </select>
+    <select id="getPassGoodsCount" resultType="java.lang.Integer">
+        select count(*)
+        from mar_check t
+        where goods_id=#{goodsId,jdbcType=BIGINT}
+                           and status!=0
+    </select>
+    <select id="showAllGoodsDetails" resultMap="GoodsMapper01">
+        select * from mar_goods where id=#{goodsId}
+    </select>
+    <select id="showBannedUser" resultMap="UserVoMapper">
+        select mar_user.id user_id,user_name,mar_user.user_status,count(mar_check.status) count
+        from mar_user
+            left join mar_check
+                on mar_user.id=mar_check.user_id
+            left join user_role
+                on mar_user.id=user_role.user_id
+        where mar_check.status=-1 and user_role.role_id=1
+        group by mar_user.id
+    </select>
+</mapper>

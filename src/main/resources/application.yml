@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/market?useSSL=false&useUnicode=true&characterEncoding=UTF-8&&serverTimezone=UTC
+    username: root
+    password: Aa@123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+      max-lifetime: 120000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  mybatis:
+    mapper-locations: classpath*:mapper/*Mapper.xml
+    type-aliases-package: com.example.demo01.Domain
+server:
+  tomcat:
+    connection-timeout: 18000000
+  port: 8888
+logging:
+  level:
+    com.example.demo01.Mapper: debug
+file:
+  real-path: D:/DataBase/pictures/
+  vir-path: /file/

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.SubmitMapper">
+    <resultMap id="SubmitMapper01" type="com.example.demo01.Domain.Submit">
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <collection property="goods" ofType="com.example.demo01.Domain.Goods">
+            <result column="goods_id" property="id"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="goods_number" property="number"/>
+        </collection>
+    </resultMap>
+    <select id="showYourSubmit" resultMap="SubmitMapper01">
+        select mar_goods.id goods_id,mar_goods.goods_name,mar_goods.number goods_number,mar_goods.goods_status status,
+               mar_submit.create_time
+        from mar_submit
+            left join mar_goods
+                on mar_submit.goods_id=mar_goods.id
+        where mar_submit.user_id=#{userId};
+    </select>
+    <select id="findSubmitted" resultType="java.lang.Integer">
+        select count(*) from mar_submit where user_id=#{userId} and goods_id=#{goodsId}
+    </select>
+    <select id="findAbleSubmitted" resultType="java.lang.Integer">
+        select count(*) from mar_submit
+            left join mar_goods
+                on mar_goods.id=mar_submit.goods_id
+        where mar_submit.goods_id=#{goodsId}
+          and mar_submit.user_id=#{userId}
+          and mar_goods.goods_status=0;
+    </select>
+
+    <delete id="delSubmitted">
+        delete mar_goods,mar_submit
+        from mar_goods
+            inner join mar_submit
+        where mar_goods.id=mar_submit.goods_id
+            and mar_submit.user_id=#{userId}
+            and mar_submit.goods_id=#{goodsId}
+    </delete>
+</mapper>

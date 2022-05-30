@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.CommentMapper">
+    <resultMap id="CommentMapper01" type="com.example.demo01.Domain.VO.CommentVo">
+        <result property="commentId" column="comment_id"/>
+        <result property="content" column="content"/>
+        <result property="rootId" column="root_id"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="toCommentUserName" column="to_comment_user_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <select id="getComments" resultMap="CommentMapper01">
+        select t1.id comment_id,t1.content,t1.root_id,t1.create_time,
+               t2.user_name create_user_name ,t2.id create_user_id,
+               t3.user_name to_comment_user_name
+        from mar_comment as t1
+            left join(select user_name,id from mar_user) as t2
+                on t1.create_by=t2.id
+            left join(select user_name,id from mar_user) as t3
+                on t1.to_comment_user_id=t3.id
+        where t1.root_id=#{rootId} and t1.goods_id=#{goodsId}
+    </select>
+    <insert id="addComment">
+        insert into mar_comment
+            value(null,#{goodsId},#{rootId},#{content},#{toCommentUserId},#{createBy},now());
+    </insert>
+</mapper>

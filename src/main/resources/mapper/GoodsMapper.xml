@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.GoodsMapper">
+    <resultMap id="GoodsMapper01" type="com.example.demo01.Domain.Goods">
+        <result column="id" property="id"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="introduction" property="introduction" typeHandler="com.example.demo01.Handler.BlobAndStringHandler"/>
+        <result column="price" property="price"/>
+        <result column="number" property="number"/>
+        <result column="goods_picture" property="goodsPicture"/>
+        <result column="goods_status" property="goodsStatus"/>
+    </resultMap>
+    <select id="showGoodsMessage" resultMap="GoodsMapper01">
+        select * from mar_goods where id=#{goodsId} and goods_status=1
+    </select>
+    <select id="guessYourPreference" resultMap="GoodsMapper01">
+        select id,goods_name,price,goods_picture from mar_goods order by rand() limit 4
+    </select>
+    <select id="showTodayGoods" resultMap="GoodsMapper01">
+        select mar_goods.id,goods_name,price,goods_picture
+        from mar_goods
+            left join mar_check
+                on mar_goods.id=mar_check.goods_id
+        where goods_status=1
+        and mar_check.check_time>=date(now())
+        and mar_check.check_time &lt; DATE_ADD(date(now()),INTERVAL 1 DAY)
+    </select>
+    <select id="showAllGoods" resultMap="GoodsMapper01">
+        select id,goods_name,price,goods_picture from mar_goods where goods_status=1
+    </select>
+    <select id="findGoods" resultMap="GoodsMapper01">
+        select id,goods_name,price,goods_picture
+        from mar_goods
+        where goods_status=1
+          and goods_name like concat('%',#{keyWords},'%')
+    </select>
+    <insert id="addGoods">
+        insert into mar_goods(goods_name,introduction,price,number,goods_picture)
+        values(#{goodsName},#{introduction},#{price},#{number},#{goodsPicture})
+    </insert>
+    <select id="findGoodsIdByGoodsName" resultType="java.lang.Long">
+        select id from mar_goods
+        where goods_name=#{goodsName}
+          and mar_goods.id not in (select goods_id from mar_submit)
+    </select>
+    <insert id="addSubmit">
+        insert into mar_submit(user_id,goods_id,create_time)
+        values(#{userId},#{goodsId},now())
+    </insert>
+    <update id="dealGoods">
+        update mar_goods set number=number-#{billNumber} where id=#{goodsId}
+    </update>
+    <update id="updateSubmitted">
+        update mar_goods
+        set number=#{number},
+            goods_name=#{goodsName},
+            introduction=#{introduction},
+            price=#{price},
+            goods_picture=#{goodsPicture}
+        where id=#{id}
+    </update>
+
+</mapper>

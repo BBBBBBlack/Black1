@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.BillMapper">
+    <resultMap id="BillMapper01" type="com.example.demo01.Domain.Bill">
+        <result column="bill_id" property="billId"/>
+        <result column="number" property="number"/>
+        <result column="create_time" property="createTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="bill_status" property="status"/>
+        <collection property="goods" ofType="com.example.demo01.Domain.Goods" >
+            <result column="goods_id" property="id"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="price" property="price"/>
+            <result column="goods_number" property="number"/>
+<!--        <result column="goods_picture" property="goodsPicture"/>-->
+        </collection>
+    </resultMap>
+
+    <resultMap id="BillMapper02" type="com.example.demo01.Domain.Bill">
+        <result column="bill_id" property="billId"/>
+        <result column="number" property="number"/>
+        <result column="create_time" property="createTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="bill_status" property="status"/>
+        <collection property="goods" ofType="com.example.demo01.Domain.Goods" >
+            <result column="goods_id" property="id"/>
+            <result column="goods_name" property="goodsName"/>
+            <result column="price" property="price"/>
+        </collection>
+        <collection property="user" ofType="com.example.demo01.Domain.User">
+            <result column="user_name" property="userName"/>
+            <result column="phone_number" property="phoneNumber"/>
+        </collection>
+    </resultMap>
+    <resultMap id="BillMapper03" type="com.example.demo01.Domain.Bill">
+        <result column="bill_id" property="billId"/>
+        <result column="number" property="number"/>
+        <result column="create_time" property="createTime"/>
+        <result column="finish_time" property="finishTime"/>
+        <result column="bill_status" property="status"/>
+        <collection property="goods" ofType="com.example.demo01.Domain.Goods" >
+            <result column="goods_id" property="id"/>
+            <result column="price" property="price"/>
+        </collection>
+        <collection property="user" ofType="com.example.demo01.Domain.User">
+            <result column="user_id" property="userId"/>
+        </collection>
+    </resultMap>
+
+    <insert id="addBill">
+        insert into mar_bill(user_id,goods_id,number,create_time)
+        values(#{userId},#{goodsId},#{number},now())
+    </insert>
+    <select id="showYourBills" resultMap="BillMapper01">
+        select mar_bill.bill_id,mar_bill.number,mar_bill.create_time,mar_bill.finish_time,mar_bill.bill_status,
+               mar_goods.id goods_id,mar_goods.goods_name,mar_goods.price
+        from mar_bill
+            left join mar_goods
+                on mar_bill.goods_id=mar_goods.id
+        where user_id=#{userId}
+    </select>
+    <select id="showOthersBills" resultMap="BillMapper02">
+        select mar_user.user_name,mar_user.phone_number,
+               mar_goods.id goods_id,mar_goods.goods_name,mar_goods.price,
+               mar_bill.bill_id,mar_bill.number,mar_bill.create_time,mar_bill.finish_time,mar_bill.bill_status
+        from mar_bill
+            left join mar_submit
+                on mar_bill.goods_id=mar_submit.goods_id
+            left join mar_goods
+                on mar_submit.goods_id=mar_goods.id
+            left join mar_user
+                on mar_bill.user_id=mar_user.id
+        where mar_submit.user_id=#{userId}
+    </select>
+    <select id="findBillByBillId" resultMap="BillMapper01">
+        select mar_bill.bill_id,mar_bill.number,mar_bill.create_time,mar_bill.finish_time,mar_bill.bill_status,
+               mar_goods.id goods_id,mar_goods.goods_name,mar_goods.price,mar_goods.number goods_number
+        from mar_bill
+            left join mar_goods
+                on mar_bill.goods_id=mar_goods.id
+        where mar_bill.bill_id=#{billId}
+    </select>
+    <update id="dealBill">
+        update mar_bill set bill_status=#{status},finish_time=now() where bill_id=#{billId}
+    </update>
+    <select id="findBill" resultType="java.lang.Integer">
+        select count(*) from mar_bill where user_id=#{userId}
+                                        and bill_id=#{billId}
+                                        and mar_bill.bill_status=0
+    </select>
+    <delete id="delBill">
+        delete from mar_bill where bill_id=#{billId} and bill_status=0
+    </delete>
+</mapper>
