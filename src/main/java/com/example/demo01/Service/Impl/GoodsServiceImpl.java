@@ -1,11 +1,9 @@
 package com.example.demo01.Service.Impl;
 
-import com.example.demo01.Domain.Check;
-import com.example.demo01.Domain.Goods;
-import com.example.demo01.Domain.LoginUser;
-import com.example.demo01.Domain.Result;
+import com.example.demo01.Domain.*;
 import com.example.demo01.Mapper.GoodsMapper;
 import com.example.demo01.Mapper.SubmitMapper;
+import com.example.demo01.Mapper.SuggestMapper;
 import com.example.demo01.MyException.WrongTypeException;
 import com.example.demo01.Service.GoodsService;
 import com.example.demo01.Util.SecurityUtil;
@@ -31,11 +29,14 @@ public class GoodsServiceImpl implements GoodsService {
     private GoodsMapper goodsMapper;
     @Autowired
     private SubmitMapper submitMapper;
+    @Autowired
+    private SuggestMapper suggestMapper;
     @Override
     public Result guessYourPreference() {
         List<Goods> yourPreference = goodsMapper.guessYourPreference();
         return new Result(200,"查询猜你喜欢成功",yourPreference);
     }
+
     @Override
     public Result showTodayGoods() {
         List<Goods> todayGoods = goodsMapper.showTodayGoods();
@@ -109,5 +110,14 @@ public class GoodsServiceImpl implements GoodsService {
         return new Result(200,"修改成功");
     }
 
-
+    @Override
+    public Result showSuggest(Long goodsId) {
+        Long userId = SecurityUtil.getNowUserId();
+        int count = submitMapper.findSubmitted(goodsId, userId);
+        if(count==0){
+            return new Result(200,"无查看权限");
+        }
+        List<Suggest> suggestList = suggestMapper.showSuggest(goodsId);
+        return new Result(200,"查询审核信息成功",suggestList);
+    }
 }

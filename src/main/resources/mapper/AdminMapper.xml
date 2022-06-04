@@ -56,4 +56,7 @@
         where mar_check.status=-1 and user_role.role_id=1
         group by mar_user.id
     </select>
+    <insert id="addSuggest">
+        insert into mar_suggest value(#{goodsId},#{content},now())
+    </insert>
 </mapper>

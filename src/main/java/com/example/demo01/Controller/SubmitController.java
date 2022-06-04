@@ -15,7 +15,7 @@ public class SubmitController {
     SubmitService submitService;
     //展示当前用户提交的商品
     @RequestMapping("/showYourSubmit")
-    @PreAuthorize("hasAuthority('common:sell')")
+    @PreAuthorize("hasAuthority('common:show_submit')")
     public Result showYourSubmit(){
         return submitService.showYourSubmit();
     }

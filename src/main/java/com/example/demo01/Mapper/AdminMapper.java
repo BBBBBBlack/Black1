@@ -2,6 +2,7 @@ package com.example.demo01.Mapper;
 
 import com.example.demo01.Domain.Check;
 import com.example.demo01.Domain.Goods;
+import com.example.demo01.Domain.Suggest;
 import com.example.demo01.Domain.VO.UserVo;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,5 @@ public interface AdminMapper {
     Long getCheckingUserId(Long goodsId);
     Goods showAllGoodsDetails(Long goodsId);
     List<UserVo> showBannedUser();
+    void addSuggest(Suggest suggest);
 }

@@ -26,7 +26,6 @@ public class UserController {
         User user=new User();
         user.setUserName(userName);
         user.setPassword(password);
-//        System.out.println(user);
         return userService.login(user);
     }
 
@@ -45,20 +44,12 @@ public class UserController {
 
     @PostMapping("/user/addProfilePicture")
     public Result addProfilePicture(@RequestParam("file") MultipartFile file){
-        System.out.println("1111111111");
+//        System.out.println("1111111111");
         return userService.addProfilePicture(file);
     }
     @RequestMapping("/user/addUserMessage")
     public Result addUserMessage(@RequestBody User user){
         return userService.addUserMessage(user);
     }
-//    @RequestMapping("/user/hello")
-//    @PreAuthorize("hasAuthority('all:show')")
-//    public String hello(@RequestParam("file")MultipartFile file,@RequestParam("name") String name){
-//        System.out.println(name);
-//        String filename = file.getOriginalFilename();
-//        System.out.println(filename);
-//        return "hello";
-//    }
 
 }

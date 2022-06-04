@@ -59,12 +59,14 @@ public class GoodsController {
         Goods goods=new Goods(null,goodsName,introduction,price,number,null,null);
         return goodsService.submitGoods(goods,file);
     }
+    //删除提交商品
     @RequestMapping("/deleteSubmittedGoods")
     @PreAuthorize("hasAuthority('common:sell')")
     public Result deleteSubmittedGoods(@RequestBody Map<String,Long> map){
         Long goodsId = map.get("goodsId");
         return goodsService.deleteSubmittedGoods(goodsId);
     }
+    //修改提交商品
     @RequestMapping("/resetSubmitted")
     @PreAuthorize("hasAuthority('common:sell')")
     public Result resetSubmitted(@RequestParam("goodsId") Long goodsId,
@@ -75,5 +77,10 @@ public class GoodsController {
                                  @RequestParam("file")MultipartFile file){
         Goods goods=new Goods(goodsId,goodsName,introduction,price,number,null,null);
         return goodsService.resetSubmitted(goods,file);
+    }
+    @RequestMapping("/showSuggest")
+    public Result showSuggest(@RequestBody Map<String,Long> map){
+        Long goodsId = map.get("goodsId");
+        return goodsService.showSuggest(goodsId);
     }
 }

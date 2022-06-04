@@ -2,6 +2,7 @@ package com.example.demo01.Controller;
 
 import com.example.demo01.Domain.Check;
 import com.example.demo01.Domain.Result;
+import com.example.demo01.Domain.Suggest;
 import com.example.demo01.Service.AdminService;
 import com.example.demo01.Service.GoodsService;
 import com.example.demo01.Service.UserService;
@@ -40,7 +41,13 @@ public class AdminController {
     }
     //展示有提交不合格商品的用户列表
     @RequestMapping("/showBannedUser")
+    @PreAuthorize("hasAuthority('admin:show_banned')")
     public Result showBannedUser(){
         return adminService.showBannedUser();
+    }
+    //添加建议
+    @RequestMapping("/addSuggest")
+    public Result addSuggest(@RequestBody Suggest suggest){
+        return adminService.addSuggest(suggest);
     }
 }

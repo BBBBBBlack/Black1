@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo01.Mapper.SuggestMapper">
+    <resultMap id="SuggestMapper01" type="com.example.demo01.Domain.Suggest">
+        <result column="goods_id" property="goodsId"/>
+        <result column="content" property="content"/>
+        <result column="release_time" property="releaseTime"/>
+    </resultMap>
+    <select id="showSuggest" resultMap="SuggestMapper01">
+        select * from mar_suggest where goods_id=#{goodsId}
+    </select>
+</mapper>

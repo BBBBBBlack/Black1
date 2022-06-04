@@ -3,6 +3,7 @@ package com.example.demo01.Service.Impl;
 import com.example.demo01.Domain.Check;
 import com.example.demo01.Domain.Goods;
 import com.example.demo01.Domain.Result;
+import com.example.demo01.Domain.Suggest;
 import com.example.demo01.Domain.VO.UserVo;
 import com.example.demo01.Mapper.AdminMapper;
 import com.example.demo01.Service.AdminService;
@@ -53,6 +54,12 @@ public class AdminServiceImpl implements AdminService {
     public Result showBannedUser() {
         List<UserVo> users = adminMapper.showBannedUser();
         return new Result(200,"查询用户信息成功",users);
+    }
+
+    @Override
+    public Result addSuggest(Suggest suggest) {
+        adminMapper.addSuggest(suggest);
+        return new Result(200,"添加成功");
     }
 
 }

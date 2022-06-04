@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bill {
-    Long billId;//订单号
+    private Long billId;//订单号
     private User user;//订货者
     private Goods goods;//所订商品
     private Integer number;//所订购商品数量
