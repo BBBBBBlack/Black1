@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo01.Mapper.SuggestMapper">
-    <resultMap id="SuggestMapper01" type="com.example.demo01.Domain.Suggest">
+    <resultMap id="SuggestMapper01" type="com.example.demo01.Domain.VO.SuggestVo">
         <result column="goods_id" property="goodsId"/>
+        <result column="goods_name" property="goodsName"/>
         <result column="content" property="content"/>
         <result column="release_time" property="releaseTime"/>
     </resultMap>
     <select id="showSuggest" resultMap="SuggestMapper01">
-        select * from mar_suggest where goods_id=#{goodsId}
+        select mar_goods.goods_name,mar_goods.id goods_id,
+               mar_suggest.content,mar_suggest.release_time
+        from mar_suggest
+            left join mar_submit
+                on mar_submit.goods_id=mar_suggest.goods_id
+            left join mar_goods
+                on mar_goods.id=mar_suggest.goods_id
+        where mar_goods.goods_status=-1
+          and mar_submit.user_id=#{userId};
     </select>
 </mapper>

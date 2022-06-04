@@ -1,6 +1,7 @@
 package com.example.demo01.Service.Impl;
 
 import com.example.demo01.Domain.*;
+import com.example.demo01.Domain.VO.SuggestVo;
 import com.example.demo01.Mapper.GoodsMapper;
 import com.example.demo01.Mapper.SubmitMapper;
 import com.example.demo01.Mapper.SuggestMapper;
@@ -111,13 +112,9 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Result showSuggest(Long goodsId) {
+    public Result showSuggest() {
         Long userId = SecurityUtil.getNowUserId();
-        int count = submitMapper.findSubmitted(goodsId, userId);
-        if(count==0){
-            return new Result(200,"无查看权限");
-        }
-        List<Suggest> suggestList = suggestMapper.showSuggest(goodsId);
+        List<SuggestVo> suggestList = suggestMapper.showSuggest(userId);
         return new Result(200,"查询审核信息成功",suggestList);
     }
 }

@@ -47,6 +47,7 @@ public class AdminController {
     }
     //添加建议
     @RequestMapping("/addSuggest")
+    @PreAuthorize("hasAuthority('admin:add_suggest')")
     public Result addSuggest(@RequestBody Suggest suggest){
         return adminService.addSuggest(suggest);
     }

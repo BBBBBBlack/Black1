@@ -78,9 +78,10 @@ public class GoodsController {
         Goods goods=new Goods(goodsId,goodsName,introduction,price,number,null,null);
         return goodsService.resetSubmitted(goods,file);
     }
+    //显示商品审核信息
     @RequestMapping("/showSuggest")
-    public Result showSuggest(@RequestBody Map<String,Long> map){
-        Long goodsId = map.get("goodsId");
-        return goodsService.showSuggest(goodsId);
+    @PreAuthorize("hasAuthority('common:show_suggest')")
+    public Result showSuggest(){
+        return goodsService.showSuggest();
     }
 }

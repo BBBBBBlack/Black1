@@ -14,5 +14,5 @@ public interface GoodsService {
     Result deleteSubmittedGoods(Long goodsId);
     Result resetSubmitted(Goods goods,MultipartFile file);
     Result guessYourPreference();
-    Result showSuggest(Long goodsId);
+    Result showSuggest();
 }
