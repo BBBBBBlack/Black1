@@ -4,8 +4,6 @@ import com.example.demo01.Domain.Check;
 import com.example.demo01.Domain.Result;
 import com.example.demo01.Domain.Suggest;
 import com.example.demo01.Service.AdminService;
-import com.example.demo01.Service.GoodsService;
-import com.example.demo01.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
