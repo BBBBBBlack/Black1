@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test01_coll.mapper.GroupMapper">
+
+    <select id="getUserList" resultType="map">
+        SELECT filesystem.user.name,`group`.user_id,`group`.type FROM `group`JOIN `user` ON `group`.user_id=`user`.email
+                AND `group`.bucket_id=#{bucketId}
+    </select>
+
+
+</mapper>

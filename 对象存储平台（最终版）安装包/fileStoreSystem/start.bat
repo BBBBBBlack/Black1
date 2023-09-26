@@ -1,0 +1,1 @@
+start jre/bin/java -jar fileStoreSystem.jar --spring.config.location=./application.yml

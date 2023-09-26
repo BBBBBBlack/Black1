@@ -1,0 +1,98 @@
+server:
+  port: 9739
+#  compression:
+#    enabled: true
+#  http2:
+#    enabled: true
+#  ssl:
+#    enabled: true
+#    key-store: D:\Download\certs\keystore.p12
+#    key-store-password: czf41234123
+#    key-store-type: PKCS12
+#    protocol: TLSv1.2
+#    key-alias: undertow
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 500MB
+  jackson: #设置获得的时间格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  datasource:
+    username: filesystem
+    password: 147258
+    url: jdbc:mysql://47.113.216.236:3306/filesystem?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 50
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 5
+  mail:
+    host: smtp.qq.com #设置邮箱主机
+    protocol: smtps
+    username: 2582085906@qq.com #配置用户名
+    password: cpwxlylqqeohebha #配置开启STMP服务的授权码（上面获取到的授权码）
+    properties:
+      mail:
+        stmp:
+          port: 465
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            required: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+    default-encoding: UTF-8
+#logging:
+#  level:
+#    root: debug
+#feign:
+#  httpclient:
+#    enabled: true
+#    max-connections: 200
+#    max-connections-per-route: 50
+#  compression:
+#    request:
+#      enabled: true
+#      min-request-size: 1
+#      mime-types: application/json,application/xml,text/xml,text/html,text/plain, application/x-www-form-urlencoded, multipart/form-data, application/octet-stream
+#    response:
+#      enabled: true
+#      useGzipDecoder: true
+
+mybatis-plus:
+  mapper-locations: classpath:mybatis/mappers/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+# Sa-Token 配置
+sa-token:
+  token-name: token
+  timeout: 86400
+  activity-timeout: -1
+  is-concurrent: false
+  is-share: true
+  token-style: random-32
+  is-log: false
