@@ -1,4 +1,4 @@
-package cn.itcast.order.web;
+package cn.itcast.order.controller;
 
 import cn.itcast.order.Clients.UserClient;
 import cn.itcast.order.pojo.Order;
