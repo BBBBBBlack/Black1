@@ -1,0 +1,18 @@
+server:
+  port: 8080
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 500MB
+  jackson: #设置获得的时间格式
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+tcp:
+  port: 9000
+path-root: D:/DataBase/test01/
